@@ -1,0 +1,31 @@
+name: Run tests
+on:
+  push:
+    branches:
+      - '*'         # matches every branch
+      - '*/*'       # matches every branch containing a single '/'
+      - '!master'   # excludes master
+jobs:
+  test:
+    runs-on: [ubuntu-latest]
+    steps:
+    - uses: actions/checkout@master
+      with:
+        fetch-depth: '0'
+    - uses: actions/setup-node@v1
+      with:
+          node-version: '10.19.0'
+    - name: Setting up test environment file
+      run: |
+          configLocation=$(pwd)/src/test/resources
+          sed -i "s|REPLACE_PORT|16008|g" sample.env
+          sed -i "s|REPLACE_CLIENT_ID|client_id|g" sample.env
+          sed -i "s|REPLACE_ENVIRONMENT|test|g" sample.env
+          sed -i "s|REPLACE_CONFIG_LOCATION|$configLocation|g" sample.env
+          cp sample.env .env.test
+          cat .env.test
+          ls -ltr
+    - name: Install dependencies
+      run: yarn install
+    - name: Running tests
+      run: yarn test

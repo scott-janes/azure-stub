@@ -1,0 +1,30 @@
+name: Build and push docker image
+
+on:
+  push:
+    branches:
+      - master
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@master
+      with:
+        fetch-depth: '0'
+    - name: Bump version and push tag
+      id: version_bump
+      uses: anothrNick/github-tag-action@1.17.3
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    - name: Build the Docker image
+      run: docker build . -f Docker/Dockerfile --tag yolomcswaggins/azure-stub:${{ steps.version_bump.outputs.tag }}
+    - name: Login to Docker
+      run: docker login --username=${{ secrets.DOCKERHUB_USERNAME }} --password=${{ secrets.DOCKERHUB_PASSWORD }}
+    - name: Publish to Registry
+      run: docker push yolomcswaggins/azure-stub:${{ steps.version_bump.outputs.tag }}
+    - name: Docker Hub Description
+      uses: peter-evans/dockerhub-description@v2.1.0
+      env:
+        DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
+        DOCKERHUB_PASSWORD: ${{ secrets.DOCKERHUB_PASSWORD }}
+        DOCKERHUB_REPOSITORY: yolomcswaggins/azure-stub

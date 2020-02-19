@@ -1,0 +1,38 @@
+doctype html
+html(lang='en-GB', title='azure stub login')
+  head
+    meta(http-equiv='X-UA-Compatible', content='IE=edge')
+    meta(name='viewport', content='width=device-width, initial-scale=1.0, user-scalable=1')
+    meta(http-equiv='content-type', content='text/html;charset=UTF-8')
+    meta(http-equiv='cache-control', content='no-cache,no-store')
+    meta(http-equiv='pragma', content='no-cache')
+    meta(http-equiv='expires', content='-1')
+    style
+      include style.css
+  body.body(dir='ltr')
+    #fullPage
+      #brandingWrapper.float
+        #branding
+      #contentWrapper.float
+        #content
+          #header
+            h1 Azure Stub
+          main
+            #workArea
+              #authArea.groupMargin
+                #loginArea
+                  #loginMessage.groupMargin
+                    | Sign in with your stubbed credentials
+                  form#loginForm(method='POST', action=actionUrl, name='loginForm')
+                    #error.fieldMargin.error.smallText
+                      span#errorText(for='', aria-live='assertive', role='alert') #{error}
+                    #formsAuthenticationArea
+                      #userNameArea
+                        input#userNameInput.text.fullWidth(name='username', type='text', tabindex='1', spellcheck='false', placeholder='Username', autocomplete='off')
+                      #passwordArea
+                        input#passwordInput.text.fullWidth(name='password', type='password', tabindex='2', placeholder='Password', autocomplete='off')
+                      #redirectURI
+                        input#redirectUri.form-control(type="hidden", name="redirectUri", value=redirectUri)
+                      #submissionArea.submitMargin
+                        span#submitButton.submit(tabindex='4', role='button', onkeypress="if (event && event.keyCode == 13) document.forms['loginForm'].submit();", onclick="document.forms['loginForm'].submit();") Sign in
+                    input#optionForms(type='hidden', name='AuthMethod', value='FormsAuthentication')
