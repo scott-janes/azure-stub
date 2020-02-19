@@ -1,3 +1,7 @@
+![Build and push docker image](https://github.com/scotyboy56/azure-stub/workflows/Build%20and%20push%20docker%20image/badge.svg?branch=master)
+[![GitHub version](https://badge.fury.io/gh/scotyboy56%2Fazure-stub.svg)](https://badge.fury.io/gh/scotyboy56%2Fazure-stub)
+[![Generic badge](https://img.shields.io/badge/GITHUB-👍-black.svg)](https://shields.io/)
+
 # Azure stub application
 
 The Azure stub provides an offline solution for using Azure oauth, to authenticate your application.
