@@ -24,7 +24,7 @@ It expects a body like
 
 ```json
 {
-    code: '1'
+    "code": "1"
 }
 ```
 
@@ -150,7 +150,7 @@ The health endpoint returns a status code `200` and a json body if the service i
 
 ```json
 {
-    status: "UP"
+    "status": "UP"
 }
 ```
 
