@@ -7,6 +7,7 @@ WORKDIR /app
 # Need to copy from the git repo
 COPY package.json .
 COPY src ./src
+COPY views ./views
 COPY sample.env ./.env
 COPY healthcheck.js .
 COPY Docker/docker-entrypoint.sh .

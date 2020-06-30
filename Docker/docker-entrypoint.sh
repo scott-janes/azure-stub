@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 set -euo pipefail
 
 sed -i "s|REPLACE_PORT|$PORT|g" .env
