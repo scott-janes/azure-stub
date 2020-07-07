@@ -4,7 +4,7 @@ const options = {
   timeout: 2000,
   host: 'localhost',
   port: process.env.PORT,
-  path: '/health',
+  path: '/azure/health',
 };
 
 const request = http.request(options, (res) => {
