@@ -49,4 +49,30 @@ Users.prototype.generateToken = async (code, clientId) => {
   return null;
 };
 
+Users.prototype.generateRefreshToken = async (code, clientId) => {
+  logger.info('Generating refresh token');
+  if (code) {
+    const value = {code};
+    const now = new Date();
+    const secondsSinceEpoch = Math.round(now.getTime() / 1000);
+    value.aud = clientId;
+    value.nbf = secondsSinceEpoch - 200;
+    value.exp = secondsSinceEpoch + 86400; // 24hours
+    logger.info('Generated refresh token');
+    return jwt.sign(value, 'shh');
+  }
+  logger.warn('Invalid refresh token');
+  return null;
+};
+
+Users.prototype.decodeToken = async (token) => {
+  logger.info('Decoding token');
+  try {
+    return jwt.verify(token, 'shh');
+  } catch (error) {
+    logger.warn(`Invalid token ${token}`);
+    throw new Error('INVALID_TOKEN');
+  }
+};
+
 export default Users;

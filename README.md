@@ -24,13 +24,47 @@ The redirect URI is the URL of your web app that the azure stub will redirect to
 
 The token endpoint is a stub of the Azure token endpoint that uses the code from the authorize endpoint, it will return a JWT based on the object in the `user-values.json` for the relevant code passed to it
 
-It expects a body like
+Token request URL:
+
+`POST http://localhost:16008/azure/oauth2/token`
+
+It expects a body like:
 
 ```json
 {
     "code": "1"
 }
 ```
+
+Refresh token request URL:
+
+`POST http://localhost:16008/azure/oauth2/token`
+
+It expects a body like:
+
+```json
+{
+    "refresh_token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsIng1dCI6Ik5HVE...",
+    "grant_type":"refresh_token"
+}
+```
+
+A successful response look like this:
+
+```json
+{
+  "id_token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsIng1dCI6Ik5HVE...",
+  "token_type": "Bearer",
+  "refresh_token": "AwABAAAAvPM1KaPlrEqdFSBzjqfTGAMxZGUTdM0t4B4rTf...",
+}
+```
+
+| Parameter  | Description |
+| ---------- | ----------- |
+| id_token | An unsigned JSON Web Token (JWT) representing an [ID token](https://docs.microsoft.com/en-us/azure/active-directory/develop/id-tokens?toc=/azure/active-directory/azuread-dev/toc.json&bc=/azure/active-directory/azuread-dev/breadcrumb/toc.json). The app can base64Url decode the segments of this token to request information about the user who signed in. The app can cache the values and display them, but it should not rely on them for any authorization or security boundaries. |
+| token_type  | Indicates the token type value. The only type that Azure AD supports is Bearer.  |
+| refresh_token  | An OAuth 2.0 refresh token. The app can use this token to acquire additional access tokens after the current access token expires. Refresh tokens are long-lived, and can be used to retain access to resources for extended periods of time.  |
+|||
 
 ## Running locally
 
@@ -39,7 +73,7 @@ This is a [Node.js](https://nodejs.org/en/) web app.
 ### Before running
 
 - [download and install Node.js](https://nodejs.org/en/download/).
-(It has only been tested on Node.js v10)
+(It has only been tested on Node.js v10.19+)
 
 - [download and install Yarn](https://classic.yarnpkg.com/en/docs/install/).
 

@@ -3,7 +3,6 @@ const router = express.Router();
 
 router.route('/health').get((req, res, next) => {
   res.json({status: 'UP'});
-  res.locals.team = 'hcp-notifier';
   res.locals.route = 'health';
   next();
 });
