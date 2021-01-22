@@ -49,30 +49,33 @@ Users.prototype.generateToken = async (code, clientId) => {
   return null;
 };
 
-Users.prototype.generateRefreshToken = async (code, clientId) => {
+Users.prototype.generateRefreshToken = async (code) => {
   logger.info('Generating refresh token');
   if (code) {
     const value = {code};
     const now = new Date();
     const secondsSinceEpoch = Math.round(now.getTime() / 1000);
-    value.aud = clientId;
-    value.nbf = secondsSinceEpoch - 200;
-    value.exp = secondsSinceEpoch + 86400; // 24hours
-    logger.info('Generated refresh token');
-    return jwt.sign(value, 'shh');
+    value.date = now;
+    value.exp = secondsSinceEpoch + 86400;
+    const refreshToken = Buffer.from(JSON.stringify(value)).toString('base64');
+    return refreshToken;
   }
   logger.warn('Invalid refresh token');
   return null;
 };
 
-Users.prototype.decodeToken = async (token) => {
-  logger.info('Decoding token');
-  try {
-    return jwt.verify(token, 'shh');
-  } catch (error) {
-    logger.warn(`Invalid token ${token}`);
-    throw new Error('INVALID_TOKEN');
+Users.prototype.decodeRefreshToken = async (refreshToken) => {
+  logger.info('Decoding refresh token');
+  const now = new Date();
+  const decode = JSON.parse(
+      Buffer.from(refreshToken, 'base64').toString('ascii')
+  );
+  const seconds = Math.round(now.getTime() / 1000);
+  if (decode.exp > seconds) {
+    return decode;
   }
+  logger.warn(`Invalid token ${refreshToken}`);
+  return null;
 };
 
 export default Users;

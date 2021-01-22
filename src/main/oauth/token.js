@@ -11,15 +11,12 @@ router.route('/token').post(async (req, res, next) => {
 
   try {
     if (grant_type === 'refresh_token') {
-      const decode = await user.decodeToken(refresh_token);
+      const decode = await user.decodeRefreshToken(refresh_token);
       _code = decode.code;
     }
 
     const jwt = await user.generateToken(_code, config.clientId);
-    const refreshToken = await user.generateRefreshToken(
-        _code,
-        config.clientId
-    );
+    const refreshToken = await user.generateRefreshToken(_code);
 
     if (!!_code && jwt) {
       return res.status(200).send({
