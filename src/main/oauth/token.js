@@ -5,20 +5,20 @@ import Users from '../users/users';
 import config from '../config';
 
 router.route('/token').post(async (req, res, next) => {
-  const {code, grant_type, refresh_token} = req.body;
+  const {grant_type, refresh_token} = req.body;
   const user = new Users();
-  let _code = code;
+  let code = req.body.code;
 
   try {
     if (grant_type === 'refresh_token') {
       const decode = await user.decodeRefreshToken(refresh_token);
-      _code = decode.code;
+      code = decode.code;
     }
 
-    const jwt = await user.generateToken(_code, config.clientId);
-    const refreshToken = await user.generateRefreshToken(_code);
+    const jwt = await user.generateToken(code, config.clientId);
+    const refreshToken = await user.generateRefreshToken(code);
 
-    if (!!_code && jwt) {
+    if (!!code && jwt) {
       return res.status(200).send({
         id_token: jwt,
         token_type: 'Bearer',
@@ -27,7 +27,7 @@ router.route('/token').post(async (req, res, next) => {
     }
     throw new Error('INVALID_CODE');
   } catch (error) {
-    if (error.message === 'INVALID_TOKEN') {
+    if (error.message === 'INVALID_REFRESH_TOKEN') {
       return next(Error('Invalid refresh token'));
     }
     return next(Error('Please provide code param'));

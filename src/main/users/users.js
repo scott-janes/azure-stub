@@ -58,6 +58,7 @@ Users.prototype.generateRefreshToken = async (code) => {
     value.date = now;
     value.exp = secondsSinceEpoch + 86400;
     const refreshToken = Buffer.from(JSON.stringify(value)).toString('base64');
+    logger.info('Generated refresh token');
     return refreshToken;
   }
   logger.warn('Invalid refresh token');
@@ -66,16 +67,21 @@ Users.prototype.generateRefreshToken = async (code) => {
 
 Users.prototype.decodeRefreshToken = async (refreshToken) => {
   logger.info('Decoding refresh token');
-  const now = new Date();
-  const decode = JSON.parse(
-      Buffer.from(refreshToken, 'base64').toString('ascii')
-  );
-  const seconds = Math.round(now.getTime() / 1000);
-  if (decode && decode.exp > seconds) {
-    return decode;
+  try {
+    const now = new Date();
+    const decode = JSON.parse(
+        Buffer.from(refreshToken, 'base64').toString('ascii')
+    );
+    const seconds = Math.round(now.getTime() / 1000);
+    if (decode && decode.exp > seconds) {
+      logger.info('Decoded refresh token');
+      return decode;
+    }
+    throw new Error('INVALID_REFRESH_TOKEN');
+  } catch (error) {
+    logger.warn(`Invalid refresh token`);
+    throw new Error('INVALID_REFRESH_TOKEN');
   }
-  logger.warn(`Invalid refresh token`);
-  return null;
 };
 
 export default Users;
