@@ -71,10 +71,10 @@ Users.prototype.decodeRefreshToken = async (refreshToken) => {
       Buffer.from(refreshToken, 'base64').toString('ascii')
   );
   const seconds = Math.round(now.getTime() / 1000);
-  if (decode.exp > seconds) {
+  if (decode && decode.exp > seconds) {
     return decode;
   }
-  logger.warn(`Invalid token ${refreshToken}`);
+  logger.warn(`Invalid refresh token`);
   return null;
 };
 
