@@ -14,7 +14,7 @@ jobs:
         fetch-depth: '0'
     - uses: actions/setup-node@v1
       with:
-          node-version: '10.19.0'
+          node-version: '14.15.4'
     - name: Setting up test environment file
       run: |
           configLocation=$(pwd)/src/test/resources
